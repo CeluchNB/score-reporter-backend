@@ -22,7 +22,8 @@ const teamSchema = mongoose.Schema({
   },
   followers: [{
     user: {
-      type: mongoose.Schema.Types.ObjectId
+      type: mongoose.Schema.Types.ObjectId,
+      unique: true
     },
     role: {
       type: String,

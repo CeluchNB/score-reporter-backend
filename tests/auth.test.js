@@ -38,5 +38,5 @@ test('malformed email should be invalid', () => {
 test('well formed email should be valid', () => {
   const goodEmail = "noah@gmail.com";
   expect(isValidEmail(goodEmail)).toBe(true);
-})
+});
 
