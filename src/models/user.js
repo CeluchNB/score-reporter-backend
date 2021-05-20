@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { isValidEmail, isValidPassword } = require('../auth/validate-credentials');
 
 const userSchema = mongoose.Schema({
   firstName: {
@@ -21,8 +21,8 @@ const userSchema = mongoose.Schema({
     trim: true,
     lowercase: true,
     validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error('Invalid email field')
+      if (!isValidEmail(value)) {
+        throw new Error('Email is invalid');
       }
     }
   },
@@ -30,19 +30,33 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: 5
-  }
-  // tokens: [{
-  //   token: {
-  //     type: String,
-  //     required: true
-  //   }
-  // }]
+    minLength: 7
+  },
+  tokens: [{
+    token: {
+      type: String,
+      required: true
+    }
+  }],
+  teams: [{
+    team: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team'
+    },
+    role: {
+      type: String,
+      enum: ['Fan', 'Coach', 'Player'],
+      default: 'Fan'
+    }
+  }]
 });
 
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
+    if (!isValidPassword(user.password)) {
+      throw new Error('Password is invalid')
+    }
     user.password = await bcrypt.hash(user.password, 8);
   }
   next();
@@ -65,9 +79,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
-
   delete userObject.password;
-  //delete userObject.tokens;
+  delete userObject.tokens;
 
   return userObject;
 }
@@ -75,8 +88,8 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-  // user.tokens = user.tokens.concat({ token });
-  // await user.save();
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
   return token;
 }
 
