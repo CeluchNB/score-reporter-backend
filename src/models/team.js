@@ -23,13 +23,19 @@ const teamSchema = mongoose.Schema({
   followers: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      unique: true
+      ref: 'User'
     },
     role: {
       type: String,
       enum: ['Fan', 'Coach', 'Player'],
       required: true,
       default: 'Fan'
+    }
+  }],
+  seasons: [{
+    season: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Season'
     }
   }]
 }, {

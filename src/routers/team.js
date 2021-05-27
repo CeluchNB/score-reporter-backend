@@ -19,9 +19,23 @@ router.post('/team', passport.authenticate('jwt', { session: false }), async (re
 
     await team.save();
     await user.save();
-    res.send(team);
+    res.status(201).send(team);
   } catch (error) {
     res.status(400).send({ message: 'Error creating team', error });
+  }
+});
+
+router.get('/team/:id', async (req, res) => {
+  try {
+    const team = await Team.findOne({ _id: req.params.id });
+
+    if (!team) {
+      return res.status(404).send({ message: 'Team not found' });
+    }
+
+    res.send(team);
+  } catch (error) {
+    res.status(500).send({ message: 'Error finding team', error });
   }
 });
 
