@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const seasonSchema = mongoose.Schema({
-  startYear: {
+  startDate: {
     type: Date,
     required: true,
     default: Date.now
   },
-  endYear: {
+  endDate: {
     type: Date,
     required: true
   },

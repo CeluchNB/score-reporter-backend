@@ -37,7 +37,8 @@ const teamOne = {
   owner: userOneId,
   followers: [{
     user: userOneId, role: 'Coach'
-  }]
+  }],
+  seasons: []
 };
 
 const teamTwoId = new mongoose.Types.ObjectId();
@@ -46,7 +47,11 @@ const teamTwo = {
   name: "Evan's Team",
   founded: "2018",
   role: "Player",
-  owner: userTwoId
+  owner: userTwoId,
+  followers: [{
+    user: userTwoId, role: 'Player'
+  }],
+  seasons: []
 };
 
 const setupDatabase = async () => {
