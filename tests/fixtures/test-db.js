@@ -54,16 +54,25 @@ const teamTwo = {
   seasons: []
 };
 
+const seasonOneId = new mongoose.Types.ObjectId();
+const seasonOne = {
+  _id: seasonOneId,
+  startDate: new Date().setFullYear(2012),
+  endDate: new Date().setFullYear(2013)
+};
+
 const setupDatabase = async () => {
   await User.deleteMany();
   await Team.deleteMany();
+  await Season.deleteMany();
 
   await new User(userOne).save();
   await new User(userTwo).save();
 
-  //await new Team(teamOne).save();
-  await new Team(teamTwo).save();
   await new Team(teamOne).save();
+  await new Team(teamTwo).save();
+
+  await new Season(seasonOne).save();
 }
 
 const unusedId = new mongoose.Types.ObjectId();
@@ -80,6 +89,8 @@ module.exports = {
   teamOne,
   teamTwoId,
   teamTwo,
+  seasonOneId,
+  seasonOne,
   unusedId,
   startDate,
   endDate,

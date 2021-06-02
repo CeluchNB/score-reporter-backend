@@ -40,7 +40,7 @@ test('test follow team', async () => {
   expect(1).toBe(1);
 });
 
-describe('/GET test getTeamById', () => {
+describe('/GET team by id', () => {
   test('with valid id', async () => {
     const response = await request(app)
       .get(`/team/${teamOne._id}`)

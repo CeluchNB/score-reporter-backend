@@ -11,6 +11,8 @@ const {
   teamOne,
   teamTwoId,
   teamTwo,
+  seasonOneId,
+  seasonOne,
   unusedId,
   startDate,
   endDate,
@@ -19,8 +21,8 @@ const {
 
 beforeEach(setupDatabase);
 
-describe('/POST create season', () => {
-  test('add season to team 1', async () => {
+describe('/POST add season', () => {
+  test('to team 1', async () => {
     const response = await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -42,7 +44,7 @@ describe('/POST create season', () => {
     expect(team.seasons[0].season.toString()).toBe(seasonId);
   });
 
-  test('add season with invalid start date', async () => {
+  test('with invalid start date', async () => {
     const response = await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -56,7 +58,7 @@ describe('/POST create season', () => {
     expect(response.body.message).toBe('Error creating season');
   });
 
-  test('add season with invalid end date', async () => {
+  test('with invalid end date', async () => {
     const response = await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -70,7 +72,7 @@ describe('/POST create season', () => {
     expect(response.body.message).toBe('Error creating season');
   });
 
-  test('add season with invalid team', async () => {
+  test('with invalid team', async () => {
     const response = await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
@@ -82,7 +84,7 @@ describe('/POST create season', () => {
       .expect(400);
   });
 
-  test('add season with invalid user token', async () => {
+  test('with invalid user token', async () => {
     await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
@@ -94,7 +96,7 @@ describe('/POST create season', () => {
       .expect(401);
   });
 
-  test('add season with no user token', async () => {
+  test('with no user token', async () => {
     await request(app)
       .post('/season')
       .send({
@@ -104,5 +106,23 @@ describe('/POST create season', () => {
       })
       .expect(401);
   });
+});
 
+describe('/GET season by id', () => {
+  test('with valid id', async () => {
+    const response = await request(app)
+      .get(`/season/${seasonOneId}`)
+      .send()
+      .expect(200);
+
+    const season = response.body;
+    expect(season.startYear).toBe()
+  });
+
+  test('with invalid id', async () => {
+    const response = await request(app)
+      .get('/season/12348765')
+      .send()
+      .expect(404);
+  });
 });
