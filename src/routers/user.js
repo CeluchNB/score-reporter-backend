@@ -39,7 +39,7 @@ router.post('/user/login', passport.authenticate('local', { session: false }), a
  * @param jwt
  */
 router.get('/user/profile', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  res.status(200).send(req.user);
+  res.send(req.user);
 });
 
 module.exports = router;

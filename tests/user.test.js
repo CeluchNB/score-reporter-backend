@@ -119,3 +119,31 @@ describe('/POST user login', () => {
 
 
 // TODO test get user profile call
+describe('/GET user profile', () => {
+  test('with authentication', async () => {
+    const response = await request(app)
+      .get('/user/profile')
+      .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+      .send()
+      .expect(200);
+
+    expect(response.body._id).toEqual(userOne._id.toString());
+    expect(response.body.email).toEqual(userOne.email);
+    expect(response.body.password).not.toBe(userOne.password);
+  });
+
+  test('without authentication', async () => {
+    const response = await request(app)
+      .get('/user/profile')
+      .send()
+      .expect(401);
+  });
+
+  test('with bad authentication', async () => {
+    const response = await request(app)
+      .get('/user/profile')
+      .set('Authorization', `Bearer asfdasdf.hfsags.asdfas`)
+      .send()
+      .expect(401);
+  });
+});
