@@ -7,6 +7,7 @@ const router = express.Router();
 
 /**
  * POST create season
+ * @param jwt
  */
 router.post('/season', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
@@ -25,6 +26,24 @@ router.post('/season', passport.authenticate('jwt', { session: false }), async (
     res.status(201).send(season);
   } catch (error) {
     res.status(400).send({ message: 'Error creating season' });
+  }
+});
+
+/**
+ * GET season
+ * @param id
+ */
+router.get('/season/:id', async (req, res) => {
+  try {
+    const season = await Season.findOne({ _id: req.params.id });
+
+    if (!season) {
+      return res.status(404).send({ message: 'Season not found' });
+    }
+
+    res.send(season);
+  } catch (error) {
+    res.status(500).send({ message: 'Error trying to find season' });
   }
 });
 

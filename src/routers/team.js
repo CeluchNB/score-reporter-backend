@@ -5,6 +5,10 @@ const Team = require('./../models/team');
 
 const router = express.Router();
 
+/**
+ * POST create team
+ * @param jwt
+ */
 router.post('/team', passport.authenticate('jwt', { session: false }), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
@@ -25,6 +29,10 @@ router.post('/team', passport.authenticate('jwt', { session: false }), async (re
   }
 });
 
+/**
+ * GET team
+ * @param id
+ */
 router.get('/team/:id', async (req, res) => {
   try {
     const team = await Team.findOne({ _id: req.params.id });
@@ -39,6 +47,11 @@ router.get('/team/:id', async (req, res) => {
   }
 });
 
+/**
+ * PATCH add follower to team
+ * @param id
+ * @param jwt
+ */
 router.patch('/team/:id/follow', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { role } = req.body;
 

@@ -4,6 +4,9 @@ const User = require('./../models/user');
 
 const router = new express.Router();
 
+/**
+ * POST create user
+ */
 router.post('/user', async (req, res) => {
   try {
     const user = new User(req.body);
@@ -16,6 +19,11 @@ router.post('/user', async (req, res) => {
   }
 });
 
+/**
+ * POST login user
+ * @param username
+ * @param password
+ */
 router.post('/user/login', passport.authenticate('local', { session: false }), async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
@@ -26,6 +34,10 @@ router.post('/user/login', passport.authenticate('local', { session: false }), a
   }
 });
 
+/**
+ * GET user profile
+ * @param jwt
+ */
 router.get('/user/profile', passport.authenticate('jwt', { session: false }), async (req, res) => {
   res.status(200).send(req.user);
 });

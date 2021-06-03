@@ -121,7 +121,7 @@ describe('/GET season by id', () => {
 
   test('with invalid id', async () => {
     const response = await request(app)
-      .get('/season/12348765')
+      .get(`/season/${unusedId}`)
       .send()
       .expect(404);
   });
