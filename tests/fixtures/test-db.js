@@ -5,6 +5,11 @@ const Team = require('../../src/models/team');
 const Season = require('../../src/models/season');
 
 const userOneId = new mongoose.Types.ObjectId();
+const userTwoId = new mongoose.Types.ObjectId();
+
+const teamOneId = new mongoose.Types.ObjectId();
+const teamTwoId = new mongoose.Types.ObjectId();
+
 const userOne = {
   _id: userOneId,
   firstName: 'Peyton',
@@ -13,10 +18,13 @@ const userOne = {
   password: 'FakeP@ss1',
   tokens: [{
     token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
+  }],
+  teams: [{
+    team: teamOneId,
+    role: 'Coach'
   }]
 };
 
-const userTwoId = new mongoose.Types.ObjectId();
 const userTwo = {
   _id: userTwoId,
   firstName: 'Amy',
@@ -25,10 +33,13 @@ const userTwo = {
   password: 'GoodPass2!',
   tokens: [{
     token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET)
+  }],
+  teams: [{
+    team: teamTwoId,
+    role: 'Player'
   }]
 };
 
-const teamOneId = new mongoose.Types.ObjectId();
 const teamOne = {
   _id: teamOneId,
   name: "Peyton's Team",
@@ -41,7 +52,6 @@ const teamOne = {
   seasons: []
 };
 
-const teamTwoId = new mongoose.Types.ObjectId();
 const teamTwo = {
   _id: teamTwoId,
   name: "Evan's Team",
