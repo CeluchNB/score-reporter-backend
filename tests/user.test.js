@@ -78,6 +78,8 @@ describe('/POST create user', () => {
   });
 });
 
+
+// TODO invalid login requests should yield 401's
 describe('/POST user login', () => {
   test('with valid email/pass', async () => {
     const response = await request(app)

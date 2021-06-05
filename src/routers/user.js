@@ -26,7 +26,7 @@ router.post('/user', async (req, res) => {
  */
 router.post('/user/login', passport.authenticate('local', { session: false }), async (req, res) => {
   try {
-    const user = await User.findByCredentials(req.body.email, req.body.password);
+    const user = await User.findById(req.user._id);
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (error) {
