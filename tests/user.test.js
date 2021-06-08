@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../src/app');
 const User = require('../src/models/user');
@@ -8,6 +9,15 @@ const {
   userTwo,
   setupDatabase
 } = require('./fixtures/test-db');
+
+beforeAll(done => {
+  done();
+});
+
+afterAll(done => {
+  mongoose.connection.close();
+  done();
+});
 
 beforeEach(setupDatabase);
 
