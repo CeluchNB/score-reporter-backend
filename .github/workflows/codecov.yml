@@ -7,22 +7,82 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    environment:
+      name: Development
+
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x, 14.x]
+        mongodb-version: ['4.2', '4.4']
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Git checkout
+      uses: actions/checkout@v2
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2.1.5
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
+      with:
+        mongodb-version: ${{ matrix.mongodb-version }}
+    
+    - name: Create env
       run: |
-        npm install
+        mkdir config
+        cd config
+        touch dev.env
+        echo PORT=${{ secrets.PORT }} >> dev.env
+        echo MONGOOSE_URL=${{ secrets.MONGOOSE_URL }} >> dev.env
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> dev.env
+        cd ..
+        
+    - name: npm install and build
+      run: |
+        npm ci
         npm run build --if-present
+      env:
+        CI: true
+
+  test:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: Test
+
+    steps:
+    - name: Git checkout
+      uses: actions/checkout@v2
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2.1.5
+      with:
+        node-version: '14.x'
+
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.6.0
+      with:
+        mongodb-version: '4.4'
+
+    - name: Create env
+      run: |
+        mkdir config
+        cd config
+        touch test.env
+        echo PORT=${{ secrets.PORT }} >> test.env
+        echo MONGOOSE_URL=${{ secrets.MONGOOSE_URL }} >> test.env
+        echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> test.env
+        cd ..
+    
+    - name: npm test
+      run: |
+        npm ci
         npm test
       env:
         CI: true
+
     - name: Upload coverage to Codecov
-      run: ./bin/codecov
+      uses: codecov/codecov-action@v1
+    
