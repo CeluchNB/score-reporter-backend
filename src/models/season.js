@@ -9,10 +9,7 @@ const seasonSchema = mongoose.Schema({
   endDate: {
     type: Date,
     required: true
-  },
-  games: [{
-    game: mongoose.Schema.Types.ObjectId
-  }]
+  }
 }, {
   timestamps: true
 });
