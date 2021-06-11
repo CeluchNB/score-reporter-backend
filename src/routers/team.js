@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
-const User = require('./../models/user');
-const Team = require('./../models/team');
+const User = require('../models/user');
+const Team = require('../models/team');
 
 const router = express.Router();
 
@@ -14,7 +14,7 @@ router.post('/team', passport.authenticate('jwt', { session: false }), async (re
     const user = await User.findById(req.user._id);
     const team = new Team({
       ...req.body,
-      owner: user._id
+      owner: user._id,
     });
 
     // Set approriate role
@@ -41,9 +41,9 @@ router.get('/team/:id', async (req, res) => {
       return res.status(404).send({ message: 'Team not found' });
     }
 
-    res.send(team);
+    return res.send(team);
   } catch (error) {
-    res.status(500).send({ message: 'Error finding team', error });
+    return res.status(500).send({ message: 'Error finding team', error });
   }
 });
 
@@ -63,7 +63,7 @@ router.patch('/team/:id/follow', passport.authenticate('jwt', { session: false }
       return res.status(400).send({ message: 'Team not found' });
     }
 
-    for (let i = 0; i < user.teams.length; i++) {
+    for (let i = 0; i < user.teams.length; i += 1) {
       if (user.teams[i].team.equals(team._id)) {
         return res.status(400).send({ message: 'Cannot follow a team twice' });
       }
@@ -74,9 +74,9 @@ router.patch('/team/:id/follow', passport.authenticate('jwt', { session: false }
 
     await team.save();
     await user.save();
-    res.send(team);
+    return res.send(team);
   } catch (error) {
-    res.status(500).send({ message: 'Error following team' });
+    return res.status(500).send({ message: 'Error following team' });
   }
 });
 

@@ -4,14 +4,14 @@ const seasonSchema = mongoose.Schema({
   startDate: {
     type: Date,
     required: true,
-    default: Date.now
+    default: Date.now,
   },
   endDate: {
     type: Date,
-    required: true
-  }
+    required: true,
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const Season = mongoose.model('Season', seasonSchema);

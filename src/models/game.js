@@ -3,31 +3,31 @@ const mongoose = require('mongoose');
 const gameSchema = mongoose.Schema({
   season: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Season'
+    ref: 'Season',
   },
   homeTeam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
-    required: true
+    required: true,
   },
   awayTeam: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Team'
+    ref: 'Team',
   },
   innings: [{
     away: {
       type: Number,
-      required: true
+      required: true,
     },
     home: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   }],
   winner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Team'
-  }
+    ref: 'Team',
+  },
 });
 
 const Game = mongoose.model('Game', gameSchema);

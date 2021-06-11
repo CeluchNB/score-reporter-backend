@@ -17,12 +17,12 @@ const userOne = {
   email: 'peyton@test.com',
   password: 'FakeP@ss1',
   tokens: [{
-    token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET)
+    token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET),
   }],
   teams: [{
     team: teamOneId,
-    role: 'Coach'
-  }]
+    role: 'Coach',
+  }],
 };
 
 const userTwo = {
@@ -32,43 +32,43 @@ const userTwo = {
   email: 'amy@pitt.com',
   password: 'GoodPass2!',
   tokens: [{
-    token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET)
+    token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET),
   }],
   teams: [{
     team: teamTwoId,
-    role: 'Player'
-  }]
+    role: 'Player',
+  }],
 };
 
 const teamOne = {
   _id: teamOneId,
-  name: "Peyton's Team",
-  founded: "2015",
-  role: "Coach",
+  name: 'Peyton\'s Team',
+  founded: '2015',
+  role: 'Coach',
   owner: userOneId,
   followers: [{
-    user: userOneId, role: 'Coach'
+    user: userOneId, role: 'Coach',
   }],
-  seasons: []
+  seasons: [],
 };
 
 const teamTwo = {
   _id: teamTwoId,
-  name: "Evan's Team",
-  founded: "2018",
-  role: "Player",
+  name: 'Evan\'s Team',
+  founded: '2018',
+  role: 'Player',
   owner: userTwoId,
   followers: [{
-    user: userTwoId, role: 'Player'
+    user: userTwoId, role: 'Player',
   }],
-  seasons: []
+  seasons: [],
 };
 
 const seasonOneId = new mongoose.Types.ObjectId();
 const seasonOne = {
   _id: seasonOneId,
   startDate: new Date().setFullYear(2012),
-  endDate: new Date().setFullYear(2013)
+  endDate: new Date().setFullYear(2013),
 };
 
 const setupDatabase = async () => {
@@ -83,7 +83,7 @@ const setupDatabase = async () => {
   await new Team(teamTwo).save();
 
   await new Season(seasonOne).save();
-}
+};
 
 const unusedId = new mongoose.Types.ObjectId();
 
@@ -104,5 +104,5 @@ module.exports = {
   unusedId,
   startDate,
   endDate,
-  setupDatabase
+  setupDatabase,
 };

@@ -1,30 +1,26 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../src/app');
 const Team = require('../src/models/team');
 const Season = require('../src/models/season');
 const {
-  userOneId,
   userOne,
-  userTwoId,
   userTwo,
   teamOneId,
-  teamOne,
-  teamTwoId,
-  teamTwo,
-  seasonOneId,
   seasonOne,
+  seasonOneId,
   unusedId,
   startDate,
   endDate,
-  setupDatabase
+  setupDatabase,
 } = require('./fixtures/test-db');
 
-beforeAll(done => {
+beforeAll((done) => {
   done();
 });
 
-afterAll(done => {
+afterAll((done) => {
   mongoose.connection.close();
   done();
 });
@@ -37,9 +33,9 @@ describe('/POST add season', () => {
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        startDate: startDate,
-        endDate: endDate,
-        teamId: teamOneId
+        startDate,
+        endDate,
+        teamId: teamOneId,
       })
       .expect(201);
 
@@ -59,9 +55,9 @@ describe('/POST add season', () => {
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        startDate: "horrible date",
-        endDate: endDate,
-        teamId: teamOneId
+        startDate: 'horrible date',
+        endDate,
+        teamId: teamOneId,
       })
       .expect(400);
 
@@ -73,9 +69,9 @@ describe('/POST add season', () => {
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        startDate: startDate,
-        endDate: "no good",
-        teamId: teamOneId
+        startDate,
+        endDate: 'no good',
+        teamId: teamOneId,
       })
       .expect(400);
 
@@ -83,13 +79,13 @@ describe('/POST add season', () => {
   });
 
   test('with invalid team', async () => {
-    const response = await request(app)
+    await request(app)
       .post('/season')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        startDate: startDate,
-        endDate: endDate,
-        teamId: "bad id"
+        startDate,
+        endDate,
+        teamId: 'bad id',
       })
       .expect(400);
   });
@@ -99,9 +95,9 @@ describe('/POST add season', () => {
       .post('/season')
       .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
       .send({
-        startDate: "2015",
-        endDate: endDate,
-        teamId: teamOneId
+        startDate: '2015',
+        endDate,
+        teamId: teamOneId,
       })
       .expect(401);
   });
@@ -110,9 +106,9 @@ describe('/POST add season', () => {
     await request(app)
       .post('/season')
       .send({
-        startDate: "2015",
-        endDate: endDate,
-        teamId: teamOneId
+        startDate: '2015',
+        endDate,
+        teamId: teamOneId,
       })
       .expect(401);
   });
@@ -126,11 +122,11 @@ describe('/GET season by id', () => {
       .expect(200);
 
     const season = response.body;
-    expect(season.startYear).toBe()
+    expect(new Date(season.startDate)).toEqual(new Date(seasonOne.startDate));
   });
 
   test('with invalid id', async () => {
-    const response = await request(app)
+    await request(app)
       .get(`/season/${unusedId}`)
       .send()
       .expect(404);

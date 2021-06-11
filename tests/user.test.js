@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../src/app');
@@ -5,16 +6,14 @@ const User = require('../src/models/user');
 const {
   userOneId,
   userOne,
-  userTwoId,
-  userTwo,
-  setupDatabase
+  setupDatabase,
 } = require('./fixtures/test-db');
 
-beforeAll(done => {
+beforeAll((done) => {
   done();
 });
 
-afterAll(done => {
+afterAll((done) => {
   mongoose.connection.close();
   done();
 });
@@ -29,7 +28,7 @@ describe('/POST create user', () => {
         firstName: 'Evan',
         lastName: 'Celuch',
         email: 'evan@cnc.com',
-        password: 'MyPass#5'
+        password: 'MyPass#5',
       })
       .expect(201);
 
@@ -39,7 +38,7 @@ describe('/POST create user', () => {
     expect(response.body.user).toMatchObject({
       firstName: 'Evan',
       lastName: 'Celuch',
-      email: 'evan@cnc.com'
+      email: 'evan@cnc.com',
     });
 
     expect(user.password).not.toBe('MyPass#5');
@@ -52,7 +51,7 @@ describe('/POST create user', () => {
         firstName: 'Evan',
         lastName: 'Celuch',
         email: 'lolbademail',
-        password: 'GoodP@ss98'
+        password: 'GoodP@ss98',
       })
       .expect(400);
 
@@ -66,7 +65,7 @@ describe('/POST create user', () => {
         firstName: 'Evan',
         lastName: 'Celuch',
         email: 'evan@cnc.com',
-        password: 'Shrtps'
+        password: 'Shrtps',
       })
       .expect(400);
 
@@ -80,14 +79,13 @@ describe('/POST create user', () => {
         firstName: 'Evan',
         lastName: 'Celuch',
         email: 'evan@cnc.com',
-        password: 'LongAlphaNum3ericP0ss'
+        password: 'LongAlphaNum3ericP0ss',
       })
       .expect(400);
 
     expect(response.body.message).toBe('Error creating user');
   });
 });
-
 
 // TODO invalid login requests should yield 401's
 describe('/POST user login', () => {
@@ -96,7 +94,7 @@ describe('/POST user login', () => {
       .post('/user/login')
       .send({
         email: userOne.email,
-        password: userOne.password
+        password: userOne.password,
       })
       .expect(200);
 
@@ -109,7 +107,7 @@ describe('/POST user login', () => {
       .post('/user/login')
       .send({
         email: 'nonexistent@email.com',
-        password: userOne.password
+        password: userOne.password,
       })
       .expect(500);
 
@@ -121,14 +119,13 @@ describe('/POST user login', () => {
       .post('/user/login')
       .send({
         email: userOne.email,
-        password: 'badpass'
+        password: 'badpass',
       })
       .expect(500);
 
     expect(response.body).toMatchObject({});
   });
 });
-
 
 // TODO test get user profile call
 describe('/GET user profile', () => {
@@ -145,16 +142,16 @@ describe('/GET user profile', () => {
   });
 
   test('without authentication', async () => {
-    const response = await request(app)
+    await request(app)
       .get('/user/profile')
       .send()
       .expect(401);
   });
 
   test('with bad authentication', async () => {
-    const response = await request(app)
+    await request(app)
       .get('/user/profile')
-      .set('Authorization', `Bearer asfdasdf.hfsags.asdfas`)
+      .set('Authorization', 'Bearer asfdasdf.hfsags.asdfas')
       .send()
       .expect(401);
   });
