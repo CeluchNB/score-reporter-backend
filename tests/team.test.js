@@ -14,10 +14,6 @@ const {
   setupDatabase,
 } = require('./fixtures/test-db');
 
-beforeAll((done) => {
-  done();
-});
-
 afterAll((done) => {
   mongoose.connection.close();
   done();

@@ -5,12 +5,12 @@ const gameSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Season',
   },
-  homeTeam: {
+  awayTeam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
     required: true,
   },
-  awayTeam: {
+  homeTeam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
   },
@@ -27,6 +27,12 @@ const gameSchema = mongoose.Schema({
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
+    required: false,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
 });
 
