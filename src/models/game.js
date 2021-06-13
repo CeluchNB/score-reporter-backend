@@ -14,16 +14,16 @@ const gameSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
   },
-  innings: [{
-    away: {
+  innings: {
+    away: [{
       type: Number,
       required: true,
-    },
-    home: {
+    }],
+    home: [{
       type: Number,
       required: true,
-    },
-  }],
+    }],
+  },
   winner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
