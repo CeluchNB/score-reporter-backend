@@ -19,6 +19,7 @@ router.post('/season', passport.authenticate('jwt', { session: false }), async (
     const season = new Season({
       ...req.body,
     });
+    season.owner = team.owner;
     team.seasons.push({ season: season._id });
 
     await season.save();

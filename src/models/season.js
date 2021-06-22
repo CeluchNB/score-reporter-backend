@@ -10,6 +10,10 @@ const seasonSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 }, {
   timestamps: true,
 });

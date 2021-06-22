@@ -70,6 +70,7 @@ const seasonOne = {
   _id: seasonOneId,
   startDate: new Date().setFullYear(2012),
   endDate: new Date().setFullYear(2013),
+  owner: userOneId,
 };
 
 const gameOneId = new mongoose.Types.ObjectId();

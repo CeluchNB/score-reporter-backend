@@ -13,6 +13,7 @@ const gameSchema = mongoose.Schema({
   homeTeam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team',
+    required: true,
   },
   innings: {
     away: [{

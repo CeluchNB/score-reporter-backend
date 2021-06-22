@@ -5,6 +5,7 @@ const app = require('../src/app');
 const Game = require('../src/models/game');
 const {
   userOne,
+  userTwo,
   teamOneId,
   teamTwoId,
   seasonOneId,
@@ -38,16 +39,16 @@ describe('/POST create game', () => {
       .expect(201);
 
     const responseGame = response.body;
-    expect(responseGame.season).toBe(seasonOneId);
-    expect(responseGame.awayTeam).toBe(teamOneId);
-    expect(responseGame.homeTeam).toBe(teamTwoId);
+    expect(responseGame.season.toString()).toBe(seasonOneId.toString());
+    expect(responseGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(responseGame.homeTeam.toString()).toBe(teamTwoId.toString());
     expect(responseGame.innings.away[0]).toBe(0);
-    expect(responseGame.innings.home).toBe(0);
+    expect(responseGame.innings.home[0]).toBe(0);
 
-    const dbGame = Game.findById(game._id);
-    expect(dbGame.season).toBe(seasonOneId);
-    expect(dbGame.awayTeam).toBe(teamOneId);
-    expect(dbGame.homeTeam).toBe(teamTwoId);
+    const dbGame = await Game.findById(responseGame._id);
+    expect(dbGame.season.toString()).toBe(seasonOneId.toString());
+    expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
   });
 
   test('including winner', async () => {
@@ -67,16 +68,16 @@ describe('/POST create game', () => {
       .expect(201);
 
     const game = response.body;
-    expect(game.season).toBe(seasonOneId);
-    expect(game.awayTeam).toBe(teamOneId);
-    expect(game.homeTeam).toBe(teamTwoId);
-    expect(game.winner).toBe(teamOneId);
+    expect(game.season.toString()).toBe(seasonOneId.toString());
+    expect(game.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(game.homeTeam.toString()).toBe(teamTwoId.toString());
+    expect(game.winner.toString()).toBe(teamOneId.toString());
 
-    const dbGame = Game.findById(game._id);
-    expect(dbGame.season).toBe(seasonOneId);
-    expect(dbGame.awayTeam).toBe(teamOneId);
-    expect(dbGame.homeTeam).toBe(teamTwoId);
-    expect(dbGame.winner).toBe(teamOneId);
+    const dbGame = await Game.findById(game._id);
+    expect(dbGame.season.toString()).toBe(seasonOneId.toString());
+    expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
+    expect(dbGame.winner.toString()).toBe(teamOneId.toString());
   });
 
   test('without winner or innings', async () => {
@@ -91,14 +92,14 @@ describe('/POST create game', () => {
       .expect(201);
 
     const game = response.body;
-    expect(game.season).toBe(seasonOneId);
-    expect(game.awayTeam).toBe(teamOneId);
-    expect(game.homeTeam).toBe(teamTwoId);
+    expect(game.season.toString()).toBe(seasonOneId.toString());
+    expect(game.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(game.homeTeam.toString()).toBe(teamTwoId.toString());
 
-    const dbGame = Game.findById(game._id);
-    expect(dbGame.season).toBe(seasonOneId);
-    expect(dbGame.awayTeam).toBe(teamOneId);
-    expect(dbGame.homeTeam).toBe(teamTwoId);
+    const dbGame = await Game.findById(game._id);
+    expect(dbGame.season.toString()).toBe(seasonOneId.toString());
+    expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
   });
 
   test('with invalid user token', async () => {
@@ -146,7 +147,7 @@ describe('/POST create game', () => {
       })
       .expect(400);
 
-    expect(response.body.message).toBe('You must include a season when creating a game.');
+    expect(response.body.message).toBe('Season was invalid');
   });
 
   test('missing away team', async () => {
