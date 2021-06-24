@@ -33,4 +33,17 @@ router.post('/game', passport.authenticate('jwt', { session: false }), async (re
   }
 });
 
+router.get('/game/:id', async (req, res) => {
+  try {
+    const game = await Game.findById(req.params.id);
+    if (!game) {
+      return res.status(404).send({ message: 'The game you requested does not exist' });
+    }
+
+    return res.send(game);
+  } catch (error) {
+    return res.status(400).send({ message: 'We were unable to find the game you requested' });
+  }
+});
+
 module.exports = router;

@@ -204,7 +204,7 @@ describe('/POST create game', () => {
 
 describe('/PUT update game', () => {
   test('with updated score and winner', async () => {
-    const game = gameOne;
+    const game = JSON.parse(JSON.stringify(gameOne));
     game.innings.away = [0, 0, 0, 0, 0];
     game.innings.home = [0, 0, 0, 0, 1];
     game.winner = teamTwoId;
@@ -235,8 +235,8 @@ describe('/GET game by id', () => {
       .expect(200);
 
     const responseGame = response.body;
-    expect(responseGame.awayTeam).toBe(teamOneId);
-    expect(responseGame.homeTeam).toBe(teamTwoId);
+    expect(responseGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(responseGame.homeTeam.toString()).toBe(teamTwoId.toString());
     expect(responseGame.innings.away[0]).toBe(0);
     expect(responseGame.innings.home[0]).toBe(1);
   });

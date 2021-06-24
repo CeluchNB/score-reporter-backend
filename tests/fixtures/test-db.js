@@ -79,7 +79,7 @@ const gameOne = {
   season: seasonOneId,
   awayTeam: teamOneId,
   homeTeam: teamTwoId,
-  inning: {
+  innings: {
     away: [0, 0, 0, 0, 0, 0, 2],
     home: [1, 0, 0, 0, 0, 0, 0],
   },
