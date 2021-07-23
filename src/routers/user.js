@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const User = require('./../models/user');
+const User = require('../models/user');
 
 const router = new express.Router();
 
@@ -28,9 +28,9 @@ router.post('/user/login', passport.authenticate('local', { session: false }), a
   try {
     const user = await User.findById(req.user._id);
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    return res.send({ user, token });
   } catch (error) {
-    res.status(400).send({ message: 'Error logging in', error });
+    return res.status(400).send({ message: 'Error logging in', error });
   }
 });
 

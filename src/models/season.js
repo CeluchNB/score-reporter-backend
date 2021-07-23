@@ -4,17 +4,18 @@ const seasonSchema = mongoose.Schema({
   startDate: {
     type: Date,
     required: true,
-    default: Date.now
+    default: Date.now,
   },
   endDate: {
     type: Date,
-    required: true
+    required: true,
   },
-  games: [{
-    game: mongoose.Schema.Types.ObjectId
-  }]
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+  },
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const Season = mongoose.model('Season', seasonSchema);

@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('passport');
-const Team = require('./../models/team');
-const Season = require('./../models/season');
+const Team = require('../models/team');
+const Season = require('../models/season');
 
 const router = express.Router();
 
@@ -17,15 +17,16 @@ router.post('/season', passport.authenticate('jwt', { session: false }), async (
     }
 
     const season = new Season({
-      ...req.body
+      ...req.body,
     });
+    season.owner = team.owner;
     team.seasons.push({ season: season._id });
 
     await season.save();
     await team.save();
-    res.status(201).send(season);
+    return res.status(201).send(season);
   } catch (error) {
-    res.status(400).send({ message: 'Error creating season' });
+    return res.status(400).send({ message: 'Error creating season' });
   }
 });
 
@@ -41,9 +42,9 @@ router.get('/season/:id', async (req, res) => {
       return res.status(404).send({ message: 'Season not found' });
     }
 
-    res.send(season);
+    return res.send(season);
   } catch (error) {
-    res.status(500).send({ message: 'Error trying to find season' });
+    return res.status(500).send({ message: 'Error trying to find season' });
   }
 });
 

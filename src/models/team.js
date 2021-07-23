@@ -4,42 +4,42 @@ const teamSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   founded: {
     type: Date,
     required: true,
-    default: Date.now
+    default: Date.now,
   },
   ended: {
     type: Date,
-    required: false
+    required: false,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
+    ref: 'User',
   },
   followers: [{
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
     },
     role: {
       type: String,
       enum: ['Fan', 'Coach', 'Player'],
       required: true,
-      default: 'Fan'
-    }
+      default: 'Fan',
+    },
   }],
   seasons: [{
     season: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Season'
-    }
-  }]
+      ref: 'Season',
+    },
+  }],
 }, {
-  timestamps: true
+  timestamps: true,
 });
 
 const Team = mongoose.model('Team', teamSchema);

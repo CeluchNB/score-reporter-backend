@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../src/app');
@@ -6,21 +7,14 @@ const Team = require('../src/models/team');
 const {
   userOneId,
   userOne,
-  userTwoId,
-  userTwo,
-  teamOneId,
   teamOne,
   teamTwoId,
   teamTwo,
   unusedId,
-  setupDatabase
+  setupDatabase,
 } = require('./fixtures/test-db');
 
-beforeAll(done => {
-  done();
-});
-
-afterAll(done => {
+afterAll((done) => {
   mongoose.connection.close();
   done();
 });
@@ -34,8 +28,8 @@ describe('/POST create team', () => {
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
         name: "Noah's Team",
-        founded: "2013",
-        role: "Coach"
+        founded: '2013',
+        role: 'Coach',
       })
       .expect(201);
 
@@ -51,8 +45,8 @@ describe('/POST create team', () => {
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
         badname: "Noah's Team",
-        badfounded: "2013",
-        role: "Coach"
+        badfounded: '2013',
+        role: 'Coach',
       })
       .expect(400);
 
@@ -82,7 +76,7 @@ describe('/GET team by id', () => {
 
   test('with invalid id', async () => {
     const response = await request(app)
-      .get(`/team/asdfasdf`)
+      .get('/team/asdfasdf')
       .send()
       .expect(500);
 
@@ -96,7 +90,7 @@ describe('/PATCH follow team', () => {
       .patch(`/team/${teamTwo._id}/follow`)
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        role: 'Coach'
+        role: 'Coach',
       })
       .expect(200);
 
@@ -108,25 +102,25 @@ describe('/PATCH follow team', () => {
       expect.arrayContaining([
         expect.objectContaining({
           user: userOneId,
-          role: 'Coach'
-        })
-      ])
+          role: 'Coach',
+        }),
+      ]),
     );
     expect(user.teams).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           team: teamTwoId,
-          role: 'Coach'
-        })
-      ])
+          role: 'Coach',
+        }),
+      ]),
     );
   });
 
   test('without authentication', async () => {
-    const response = await request(app)
+    await request(app)
       .patch(`/team/${teamTwo._id}/follow`)
       .send({
-        role: 'Coach'
+        role: 'Coach',
       })
       .expect(401);
   });
@@ -136,7 +130,7 @@ describe('/PATCH follow team', () => {
       .patch(`/team/${teamOne._id}/follow`)
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        role: 'Coach'
+        role: 'Coach',
       })
       .expect(400);
 
@@ -148,7 +142,7 @@ describe('/PATCH follow team', () => {
       .patch(`/team/${new mongoose.Types.ObjectId()}/follow`)
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        role: 'Coach'
+        role: 'Coach',
       })
       .expect(400);
 
@@ -157,10 +151,10 @@ describe('/PATCH follow team', () => {
 
   test('with invalid id', async () => {
     const response = await request(app)
-      .patch(`/team/asdfasdf/follow`)
+      .patch('/team/asdfasdf/follow')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send({
-        role: 'Coach'
+        role: 'Coach',
       })
       .expect(500);
 

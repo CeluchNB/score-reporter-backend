@@ -7,12 +7,12 @@ const userSchema = mongoose.Schema({
   firstName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   lastName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
@@ -24,38 +24,38 @@ const userSchema = mongoose.Schema({
       if (!isValidEmail(value)) {
         throw new Error('Email is invalid');
       }
-    }
+    },
   },
   password: {
     type: String,
     required: true,
     trim: true,
-    minLength: 7
+    minLength: 7,
   },
   tokens: [{
     token: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   }],
   teams: [{
     team: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Team'
+      ref: 'Team',
     },
     role: {
       type: String,
       enum: ['Fan', 'Coach', 'Player'],
-      default: 'Fan'
-    }
-  }]
+      default: 'Fan',
+    },
+  }],
 });
 
 userSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     if (!isValidPassword(user.password)) {
-      throw new Error('Password is invalid')
+      throw new Error('Password is invalid');
     }
     user.password = await bcrypt.hash(user.password, 8);
   }
@@ -74,7 +74,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
   }
 
   return user;
-}
+};
 
 userSchema.methods.toJSON = function () {
   const user = this;
@@ -83,7 +83,7 @@ userSchema.methods.toJSON = function () {
   delete userObject.tokens;
 
   return userObject;
-}
+};
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
@@ -91,7 +91,7 @@ userSchema.methods.generateAuthToken = async function () {
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
-}
+};
 
 const User = mongoose.model('User', userSchema);
 
