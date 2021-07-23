@@ -210,20 +210,20 @@ describe('/PUT update game', () => {
     game.winner = teamTwoId;
 
     const response = await request(app)
-      .put(`/game/${gameOneId}`)
+      .put('/game')
       .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
       .send(game)
       .expect(200);
 
     const responseGame = response.body;
-    expect(responseGame.awayTeam).toBe(teamOneId);
-    expect(responseGame.homeTeam).toBe(teamTwoId);
-    expect(responseGame.winner).toBe(teamTwoId);
+    expect(responseGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(responseGame.homeTeam.toString()).toBe(teamTwoId.toString());
+    expect(responseGame.winner.toString()).toBe(teamTwoId.toString());
 
     const dbGame = await Game.findById(responseGame._id);
-    expect(dbGame.awayTeam).toBe(teamOneId);
-    expect(dbGame.homeTeam).toBe(teamTwoId);
-    expect(dbGame.winner).toBe(teamTwoId);
+    expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
+    expect(dbGame.winner.toString()).toBe(teamTwoId.toString());
   });
 });
 
@@ -269,9 +269,9 @@ describe('/DELETE game by id', () => {
       .expect(200);
 
     const responseGame = response.body;
-    expect(responseGame.season).toBe(seasonOneId);
-    expect(responseGame.awayTeam).toBe(teamOneId);
-    expect(responseGame.homeTeam).toBe(teamTwoId);
+    expect(responseGame.season.toString()).toBe(seasonOneId.toString());
+    expect(responseGame.awayTeam.toString()).toBe(teamOneId.toString());
+    expect(responseGame.homeTeam.toString()).toBe(teamTwoId.toString());
   });
 
   test('with invalid game', async () => {
@@ -291,6 +291,6 @@ describe('/DELETE game by id', () => {
       .send()
       .expect(401);
 
-    expect(response.body.message).toBe('You must own the game to delete it.');
+    expect(response.body.message).toBe('You must own the game to delete it');
   });
 });
