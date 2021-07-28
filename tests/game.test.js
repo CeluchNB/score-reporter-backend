@@ -183,23 +183,6 @@ describe('/POST create game', () => {
 
     expect(response.body.message).toBe('You must have both teams when creating a game.');
   });
-
-  test('missing away team', async () => {
-    const response = await request(app)
-      .post('/game')
-      .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
-      .send({
-        season: seasonOneId,
-        homeTeam: teamTwoId,
-        innings: {
-          away: [0],
-          home: [0],
-        },
-      })
-      .expect(400);
-
-    expect(response.body.message).toBe('You must have both teams when creating a game.');
-  });
 });
 
 describe('/PUT update game', () => {
@@ -224,6 +207,44 @@ describe('/PUT update game', () => {
     expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
     expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
     expect(dbGame.winner.toString()).toBe(teamTwoId.toString());
+  });
+
+  test('with non-existent season', async () => {
+    const game = JSON.parse(JSON.stringify(gameOne));
+    game.season = gameOneId;
+
+    const response = await request(app)
+      .put('/game')
+      .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+      .send(game)
+      .expect(404);
+
+    expect(response.body.message).toBe('Season was not found');
+  });
+
+  test('with invalid user', async () => {
+    const game = JSON.parse(JSON.stringify(gameOne));
+
+    const response = await request(app)
+      .put('/game')
+      .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+      .send(game)
+      .expect(401);
+
+    expect(response.body.message).toBe('You must own the season to update a game');
+  });
+
+  test('with invalid game data', async () => {
+    const game = JSON.parse(JSON.stringify(gameOne));
+    game.season = 'invalid id';
+
+    const response = await request(app)
+      .put('/game')
+      .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+      .send(game)
+      .expect(400);
+
+    expect(response.body.message).toBe('Error replacing game');
   });
 });
 
@@ -292,5 +313,15 @@ describe('/DELETE game by id', () => {
       .expect(401);
 
     expect(response.body.message).toBe('You must own the game to delete it');
+  });
+
+  test('with invalid game id', async () => {
+    const response = await request(app)
+      .delete('/game/badid')
+      .set('Authorization', `Bearer ${userTwo.tokens[0].token}`)
+      .send()
+      .expect(400);
+
+    expect(response.body.message).toBe('Unable to delete game');
   });
 });

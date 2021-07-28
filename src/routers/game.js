@@ -26,10 +26,11 @@ router.post('/game', passport.authenticate('jwt', { session: false }), async (re
 
     return res.status(201).send(game);
   } catch (error) {
+    let message = 'Error creating game';
     if (error.errors.awayTeam || error.errors.homeTeam) {
-      return res.status(400).send({ message: 'You must have both teams when creating a game.' });
+      message = 'You must have both teams when creating a game.';
     }
-    return res.status(400).send({ message: 'Error creating game' });
+    return res.status(400).send({ message });
   }
 });
 
@@ -50,7 +51,7 @@ router.put('/game', passport.authenticate('jwt', { session: false }), async (req
   try {
     const season = await Season.findById(req.body.season);
     if (!season) {
-      return res.status(404).send({ message: 'Season was invalid' });
+      return res.status(404).send({ message: 'Season was not found' });
     }
 
     if (!season.owner.equals(req.user._id)) {
@@ -81,7 +82,7 @@ router.delete('/game/:id', passport.authenticate('jwt', { session: false }), asy
     await Game.deleteOne({ _id: game._id });
     return res.send(game);
   } catch (error) {
-    return res.status(400).send({ message: '' });
+    return res.status(400).send({ message: 'Unable to delete game' });
   }
 });
 
