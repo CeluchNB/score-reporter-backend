@@ -44,7 +44,7 @@ router.get('/season/:id', async (req, res) => {
 
     return res.send(season);
   } catch (error) {
-    return res.status(500).send({ message: 'Error trying to find season' });
+    return res.status(400).send({ message: 'Error trying to find season' });
   }
 });
 

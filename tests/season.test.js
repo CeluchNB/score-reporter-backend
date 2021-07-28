@@ -121,10 +121,21 @@ describe('/GET season by id', () => {
     expect(new Date(season.startDate)).toEqual(new Date(seasonOne.startDate));
   });
 
-  test('with invalid id', async () => {
-    await request(app)
+  test('with unused id', async () => {
+    const response = await request(app)
       .get(`/season/${unusedId}`)
       .send()
       .expect(404);
+
+    expect(response.body.message).toBe('Season not found');
+  });
+
+  test('with invalid id', async () => {
+    const response = await request(app)
+      .get('/season/badid')
+      .send()
+      .expect(400);
+
+    expect(response.body.message).toBe('Error trying to find season');
   });
 });
