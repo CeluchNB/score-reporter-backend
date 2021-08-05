@@ -25,15 +25,15 @@ passport.use(new LocalStrategy({
 }));
 
 // TODO: match jwt_payload to jwt in user object for added security
-passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
-  User.findOne({ _id: jwtPayload._id }, (err, user) => {
+// eslint-disable-next-line camelcase
+passport.use(new JwtStrategy(opts, (jwt_payload, done) => {
+  User.findOne({ _id: jwt_payload.sub }, (err, user) => {
     if (err) {
       return done(err, false);
     }
     if (!user) {
       return done(null, false);
     }
-
     return done(null, user);
   });
 }));

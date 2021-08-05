@@ -11,6 +11,11 @@ const userTwoId = new mongoose.Types.ObjectId();
 const teamOneId = new mongoose.Types.ObjectId();
 const teamTwoId = new mongoose.Types.ObjectId();
 
+const payloadOne = {
+  sub: userOneId,
+  iat: Date.now(),
+};
+
 const userOne = {
   _id: userOneId,
   firstName: 'Peyton',
@@ -18,12 +23,17 @@ const userOne = {
   email: 'peyton@test.com',
   password: 'FakeP@ss1',
   tokens: [{
-    token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET),
+    token: jwt.sign(payloadOne, process.env.JWT_SECRET),
   }],
   teams: [{
     team: teamOneId,
     role: 'Coach',
   }],
+};
+
+const payloadTwo = {
+  sub: userTwoId,
+  iat: Date.now(),
 };
 
 const userTwo = {
@@ -33,7 +43,7 @@ const userTwo = {
   email: 'amy@pitt.com',
   password: 'GoodPass2!',
   tokens: [{
-    token: jwt.sign({ _id: userTwoId }, process.env.JWT_SECRET),
+    token: jwt.sign(payloadTwo, process.env.JWT_SECRET),
   }],
   teams: [{
     team: teamTwoId,

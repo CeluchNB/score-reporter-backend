@@ -42,4 +42,19 @@ router.get('/user/profile', passport.authenticate('jwt', { session: false }), as
   res.send(req.user);
 });
 
+/**
+ * POST logout user
+ * @param jwt
+ */
+router.post('/user/logout', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    const token = req.header('Authorization').replace('Bearer ', '');
+    req.user.tokens = req.user.tokens.filter((jwt) => jwt.token !== token);
+    await req.user.save();
+    return res.send();
+  } catch (error) {
+    return res.status(400).send({ message: 'Error signing out' });
+  }
+});
+
 module.exports = router;

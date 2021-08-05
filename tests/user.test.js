@@ -152,3 +152,25 @@ describe('/GET user profile', () => {
       .expect(401);
   });
 });
+
+describe('logout one token', () => {
+  test('logout with valid token', async () => {
+    const { token } = userOne.tokens[0];
+    await request(app)
+      .post('/user/logout')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+      .expect(200);
+
+    const user = User.findById(userOne._id);
+    expect(user.tokens).toEqual(expect.not.arrayContaining([token]));
+  });
+
+  test('logout without valid token', async () => {
+    await request(app)
+      .post('/user/logout')
+      .set('Authorization', 'Bearer 1234.asdf.1234')
+      .send()
+      .expect(401);
+  });
+});
