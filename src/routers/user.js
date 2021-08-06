@@ -30,7 +30,7 @@ router.post('/user/login', passport.authenticate('local', { session: false }), a
     const token = await user.generateAuthToken();
     return res.send({ user, token });
   } catch (error) {
-    return res.status(400).send({ message: 'Error logging in', error });
+    return res.status(500).send({ message: 'Error logging in', error });
   }
 });
 
@@ -53,7 +53,21 @@ router.post('/user/logout', passport.authenticate('jwt', { session: false }), as
     await req.user.save();
     return res.send();
   } catch (error) {
-    return res.status(400).send({ message: 'Error signing out' });
+    return res.status(500).send({ message: 'Error signing out', error });
+  }
+});
+
+/**
+ * POST logout all user devices
+ * @param jwt
+ */
+router.post('/user/logoutAll', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    return res.send();
+  } catch (error) {
+    return res.status(500).send({ message: 'Error signing out', error });
   }
 });
 
