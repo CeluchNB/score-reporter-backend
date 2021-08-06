@@ -121,6 +121,21 @@ describe('/POST user login', () => {
 
     expect(response.body).toMatchObject({});
   });
+
+  test('while causing error', async () => {
+    jest.spyOn(User.prototype, 'generateAuthToken')
+      .mockImplementationOnce(() => {
+        throw Error('Error');
+      });
+    const response = await request(app)
+      .post('/user/login')
+      .send({
+        email: userOne.email,
+        password: userOne.password,
+      })
+      .expect(500);
+    expect(response.body.message).toBe('Error logging in');
+  });
 });
 
 // TODO test get user profile call
@@ -150,5 +165,80 @@ describe('/GET user profile', () => {
       .set('Authorization', 'Bearer asfdasdf.hfsags.asdfas')
       .send()
       .expect(401);
+  });
+});
+
+describe('/POST logout one token', () => {
+  test('logout with valid token', async () => {
+    const { token } = userOne.tokens[0];
+    await request(app)
+      .post('/user/logout')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+      .expect(200);
+
+    const user = User.findById(userOne._id);
+    expect(user.tokens).toEqual(expect.not.arrayContaining([token]));
+  });
+
+  test('logout without valid token', async () => {
+    await request(app)
+      .post('/user/logout')
+      .set('Authorization', 'Bearer 1234.asdf.1234')
+      .send()
+      .expect(401);
+  });
+
+  test('logout while causing error', async () => {
+    jest.spyOn(User.prototype, 'save')
+      .mockImplementationOnce(() => {
+        throw Error('Error');
+      });
+
+    const { token } = userOne.tokens[0];
+    const response = await request(app)
+      .post('/user/logout')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+      .expect(500);
+
+    expect(response.body.message).toBe('Error signing out');
+  });
+});
+
+describe('/POST logout all devices', () => {
+  test('logout all with valid token', async () => {
+    const { token } = userOne.tokens[0];
+    await request(app)
+      .post('/user/logoutAll')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+      .expect(200);
+
+    const user = await User.findById(userOne._id);
+    expect(user.tokens.length).toEqual(0);
+  });
+
+  test('logout all with invalid token', async () => {
+    await request(app)
+      .post('/user/logoutAll')
+      .set('Authorization', 'Bearer 9876.asdf.htu34f')
+      .send()
+      .expect(401);
+  });
+
+  test('logout all while causing an error', async () => {
+    jest.spyOn(User.prototype, 'save')
+      .mockImplementationOnce(() => {
+        throw Error('Error');
+      });
+    const { token } = userOne.tokens[0];
+    const response = await request(app)
+      .post('/user/logoutAll')
+      .set('Authorization', `Bearer ${token}`)
+      .send()
+      .expect(500);
+
+    expect(response.body.message).toBe('Error signing out');
   });
 });
