@@ -71,4 +71,19 @@ router.post('/user/logoutAll', passport.authenticate('jwt', { session: false }),
   }
 });
 
+
+/**
+ * GET user by id
+ * @param id
+ */
+router.get('/user/:id', async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id });
+
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(404).send({ message: 'Unable to find user', error });
+  }
+});
+
 module.exports = router;

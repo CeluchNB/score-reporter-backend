@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const request = require('supertest');
+const { response } = require('../src/app');
 const app = require('../src/app');
 const User = require('../src/models/user');
 const {
@@ -240,5 +241,31 @@ describe('/POST logout all devices', () => {
       .expect(500);
 
     expect(response.body.message).toBe('Error signing out');
+  });
+});
+
+describe('/GET user by id', () => {
+  test('get user with valid id', async () => {
+    const response = await request(app)
+      .get(`/user/${userOneId}`)
+      .send()
+      .expect(200)
+    
+    const user = response.body;
+    expect(user.firstName).toBe(userOne.firstName);
+    expect(user.lastName).toBe(userOne.lastName);
+    expect(user.email).toBe(userOne.email);
+    expect(user.teams.length).toBe(userOne.teams.length);
+    expect(user.password).toBe(undefined);
+    expect(user.tokens).toBe(undefined);
+  });
+
+  test('get user with invalid id', async () => {
+    const response = await request(app)
+      .get(`/user/badid`)
+      .send()
+      .expect(404);
+
+      expect(response.body.message).toBe('Unable to find user');
   });
 });
