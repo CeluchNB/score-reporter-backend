@@ -14,6 +14,12 @@ const seasonSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
   },
+  games: [{
+    game: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Game'
+    }
+  }]
 }, {
   timestamps: true,
 });
