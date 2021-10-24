@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const request = require('supertest');
 const app = require('../src/app');
 const Game = require('../src/models/game');
+const Season = require('../src/models/season');
 const {
   userOne,
   userTwo,
@@ -49,6 +50,10 @@ describe('/POST create game', () => {
     expect(dbGame.season.toString()).toBe(seasonOneId.toString());
     expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
     expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
+
+    const dbSeason = await Season.findById(dbGame.season);
+    expect(dbSeason.games.length).toBe(1);
+    expect(dbSeason.games[0].game.toString()).toBe(dbGame._id.toString());
   });
 
   test('including winner', async () => {
@@ -78,6 +83,10 @@ describe('/POST create game', () => {
     expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
     expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
     expect(dbGame.winner.toString()).toBe(teamOneId.toString());
+
+    const dbSeason = await Season.findById(dbGame.season);
+    expect(dbSeason.games.length).toBe(1);
+    expect(dbSeason.games[0].game.toString()).toBe(dbGame._id.toString());
   });
 
   test('without winner or innings', async () => {
@@ -100,6 +109,10 @@ describe('/POST create game', () => {
     expect(dbGame.season.toString()).toBe(seasonOneId.toString());
     expect(dbGame.awayTeam.toString()).toBe(teamOneId.toString());
     expect(dbGame.homeTeam.toString()).toBe(teamTwoId.toString());
+
+    const dbSeason = await Season.findById(dbGame.season);
+    expect(dbSeason.games.length).toBe(1);
+    expect(dbSeason.games[0].game.toString()).toBe(dbGame._id.toString());
   });
 
   test('with invalid user token', async () => {

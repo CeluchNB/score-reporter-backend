@@ -21,9 +21,11 @@ router.post('/game', passport.authenticate('jwt', { session: false }), async (re
     }
 
     const game = new Game(req.body);
+    season.games.push({ game: game._id })
 
     await game.save();
-
+    await season.save();
+    
     return res.status(201).send(game);
   } catch (error) {
     let message = 'Error creating game';
